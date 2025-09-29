@@ -2996,7 +2996,7 @@
             return uniqueItems.sort();
         }
 
-        // Toggles the visibility of the "Other" text input and resizes the widget
+        // Toggles the visibility of the "Other" text input
         function toggleOtherInput(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
             const otherInput = document.getElementById(`other${dropdownId.charAt(0).toUpperCase() + dropdownId.slice(1)}Input`);
@@ -3009,7 +3009,7 @@
             
             // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (typeof JFCustomWidget !== 'undefined') {
+                if (JFCustomWidget) {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3046,7 +3046,7 @@
             
             // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (typeof JFCustomWidget !== 'undefined') {
+                if (JFCustomWidget) {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3081,7 +3081,7 @@
             
             // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (typeof JFCustomWidget !== 'undefined') {
+                if (JFCustomWidget) {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3105,7 +3105,7 @@
             
             // Set the initial height of the widget on load
             setTimeout(() => {
-                if (typeof JFCustomWidget !== 'undefined') {
+                if (JFCustomWidget) {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3113,36 +3113,29 @@
             JFCustomWidget.subscribe("submit", function() {
                 let stateValue = document.getElementById("state").value;
                 if (stateValue === 'Other') {
-                    // Use the value from the text box if "Other" is selected
                     stateValue = document.getElementById("otherStateInput").value;
                 }
-
+            
                 let districtValue = document.getElementById("district").value;
                 if (districtValue === 'Other') {
-                    // Use the value from the text box if "Other" is selected
                     districtValue = document.getElementById("otherDistrictInput").value;
                 }
                 
                 let siteValue = document.getElementById("site").value;
                 if (siteValue === 'Other') {
-                    // Use the value from the text box if "Other" is selected
                     siteValue = document.getElementById("otherSiteInput").value;
                 }
-
-                // 1. Create the structured data object
-                const structuredData = {
-                    state: stateValue,
-                    district: districtValue,
-                    site: siteValue
-                };
-
-                // 2. FIX: Convert the JavaScript object into a JSON string
-                const jsonString = JSON.stringify(structuredData);
-
+            
                 let result = {
                     valid: true,
-                    value: jsonString // Pass the JSON string to JotForm
+                    value: JSON.stringify({
+                        state: stateValue,
+                        district: districtValue,
+                        site: siteValue
+                    })
                 };
+                JFCustomWidget.sendSubmit(result);
+            });
                 JFCustomWidget.sendSubmit(result);
             });
         }
