@@ -2996,7 +2996,7 @@
             return uniqueItems.sort();
         }
 
-        // Toggles the visibility of the "Other" text input
+        // Toggles the visibility of the "Other" text input and resizes the widget
         function toggleOtherInput(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
             const otherInput = document.getElementById(`other${dropdownId.charAt(0).toUpperCase() + dropdownId.slice(1)}Input`);
@@ -3007,8 +3007,9 @@
                 otherInput.value = ''; // Clear the input when hidden
             }
             
+            // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (JFCustomWidget) {
+                if (typeof JFCustomWidget !== 'undefined') {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3043,8 +3044,9 @@
                 districtSel.disabled = true;
             }
             
+            // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (JFCustomWidget) {
+                if (typeof JFCustomWidget !== 'undefined') {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
@@ -3077,41 +3079,12 @@
                 siteSel.disabled = true;
             }
             
+            // Set a slight delay to allow the DOM to render the new elements before resizing
             setTimeout(() => {
-                if (JFCustomWidget) {
+                if (typeof JFCustomWidget !== 'undefined') {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
             }, 0);
-        }
-
-        function sendCurrentData() {
-            let stateValue = document.getElementById("state").value;
-            if (stateValue === 'Other') {
-                stateValue = document.getElementById("otherStateInput").value.trim();
-            }
-
-            let districtValue = document.getElementById("district").value;
-            if (districtValue === 'Other') {
-                districtValue = document.getElementById("otherDistrictInput").value.trim();
-            }
-            
-            let siteValue = document.getElementById("site").value;
-            if (siteValue === 'Other') {
-                siteValue = document.getElementById("otherSiteInput").value.trim();
-            }
-
-            const isValid = !!(stateValue && districtValue && siteValue);
-            
-            const dataObj = {
-                state: stateValue,
-                district: districtValue,
-                site: siteValue
-            };
-
-            JFCustomWidget.sendData({
-                valid: isValid,
-                value: JSON.stringify(dataObj)
-            });
         }
 
         window.onload = function() {
@@ -3129,71 +3102,49 @@
 
             document.getElementById('district').disabled = true;
             document.getElementById('site').disabled = true;
-
-            // Add event listeners for real-time data sending
-            document.getElementById("state").addEventListener("change", sendCurrentData);
-            document.getElementById("district").addEventListener("change", sendCurrentData);
-            document.getElementById("site").addEventListener("change", sendCurrentData);
-            document.getElementById("otherStateInput").addEventListener("input", sendCurrentData);
-            document.getElementById("otherDistrictInput").addEventListener("input", sendCurrentData);
-            document.getElementById("otherSiteInput").addEventListener("input", sendCurrentData);
-
-            // Handle populate (editing existing submissions)
-            JFCustomWidget.subscribe("populate", function(value) {
-                if (value) {
-                    try {
-                        const savedData = JSON.parse(value);
-                        
-                        const stateSelect = document.getElementById("state");
-                        if ([...stateSelect.options].some(opt => opt.value === savedData.state)) {
-                            stateSelect.value = savedData.state;
-                        } else {
-                            stateSelect.value = "Other";
-                            document.getElementById("otherStateInput").value = savedData.state;
-                            toggleOtherInput('state');
-                        }
-                        updateDistricts();
-                        
-                        const districtSelect = document.getElementById("district");
-                        if ([...districtSelect.options].some(opt => opt.value === savedData.district)) {
-                            districtSelect.value = savedData.district;
-                        } else {
-                            districtSelect.value = "Other";
-                            document.getElementById("otherDistrictInput").value = savedData.district;
-                            toggleOtherInput('district');
-                        }
-                        updateSites();
-                        
-                        const siteSelect = document.getElementById("site");
-                        if ([...siteSelect.options].some(opt => opt.value === savedData.site)) {
-                            siteSelect.value = savedData.site;
-                        } else {
-                            siteSelect.value = "Other";
-                            document.getElementById("otherSiteInput").value = savedData.site;
-                            toggleOtherInput('site');
-                        }
-                    } catch (e) {
-                        console.error("Error parsing saved data:", e);
-                    }
-                }
-            });
-
-            // Handle submit
-            JFCustomWidget.subscribe("submit", function() {
-                sendCurrentData();
-                JFCustomWidget.sendSubmit({valid: true});
-            });
-
-            // CRITICAL: Signal widget is ready
-            JFCustomWidget.subscribe("ready", function() {
-                JFCustomWidget.sendReady();
-            });
             
+            // Set the initial height of the widget on load
             setTimeout(() => {
-                if (JFCustomWidget) {
+                if (typeof JFCustomWidget !== 'undefined') {
                     JFCustomWidget.setHeight(document.body.scrollHeight);
                 }
-            }, 100);
+            }, 0);
+
+            JFCustomWidget.subscribe("submit", function() {
+                let stateValue = document.getElementById("state").value;
+                if (stateValue === 'Other') {
+                    // Use the value from the text box if "Other" is selected
+                    stateValue = document.getElementById("otherStateInput").value;
+                }
+
+                let districtValue = document.getElementById("district").value;
+                if (districtValue === 'Other') {
+                    // Use the value from the text box if "Other" is selected
+                    districtValue = document.getElementById("otherDistrictInput").value;
+                }
+                
+                let siteValue = document.getElementById("site").value;
+                if (siteValue === 'Other') {
+                    // Use the value from the text box if "Other" is selected
+                    siteValue = document.getElementById("otherSiteInput").value;
+                }
+
+                // 1. Create the structured data object
+                const structuredData = {
+                    state: stateValue,
+                    district: districtValue,
+                    site: siteValue
+                };
+
+                // 2. FIX: Convert the JavaScript object into a JSON string
+                const jsonString = JSON.stringify(structuredData);
+
+                let result = {
+                    valid: true,
+                    value: jsonString // Pass the JSON string to JotForm
+                };
+                JFCustomWidget.sendSubmit(result);
+            });
         }
     </script>
 </body>
