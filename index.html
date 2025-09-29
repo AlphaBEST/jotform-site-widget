@@ -3087,30 +3087,29 @@
             }, 0);
         }
 
-        window.onload = function() {
-            const states = getUniqueAndSorted(data, "state");
-            const stateSel = document.getElementById("state");
-            
-            stateSel.innerHTML = '<option value="">Please choose</option>';
-            states.push("Other");
-            const stateOptions = states.map(s => `<option value="${s}">${s}</option>`).join('');
-            stateSel.innerHTML += stateOptions;
-            
-            toggleOtherInput('state');
-            toggleOtherInput('district');
-            toggleOtherInput('site');
-
-            document.getElementById('district').disabled = true;
-            document.getElementById('site').disabled = true;
-            
-            // Set the initial height of the widget on load
-            setTimeout(() => {
-                if (JFCustomWidget) {
-                    JFCustomWidget.setHeight(document.body.scrollHeight);
-                }
-            }, 0);
-
-         JFCustomWidget.subscribe("submit", function() {
+    window.onload = function() {
+        const states = getUniqueAndSorted(data, "state");
+        const stateSel = document.getElementById("state");
+        
+        stateSel.innerHTML = '<option value="">Please choose</option>';
+        states.push("Other");
+        const stateOptions = states.map(s => `<option value="${s}">${s}</option>`).join('');
+        stateSel.innerHTML += stateOptions;
+        
+        toggleOtherInput('state');
+        toggleOtherInput('district');
+        toggleOtherInput('site');
+        document.getElementById('district').disabled = true;
+        document.getElementById('site').disabled = true;
+        
+        // Set the initial height of the widget on load
+        setTimeout(() => {
+            if (JFCustomWidget) {
+                JFCustomWidget.setHeight(document.body.scrollHeight);
+            }
+        }, 0);
+    
+        JFCustomWidget.subscribe("submit", function() {
             let stateValue = document.getElementById("state").value;
             if (stateValue === 'Other') {
                 stateValue = document.getElementById("otherStateInput").value;
@@ -3137,7 +3136,11 @@
                 value: jsonString
             });
         });
-        }
-    </script>
+    
+        JFCustomWidget.subscribe("ready", function() {
+            JFCustomWidget.sendReady();
+        });
+    }
+</script>
 </body>
 </html>
