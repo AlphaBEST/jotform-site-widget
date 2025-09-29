@@ -3110,32 +3110,33 @@
                 }
             }, 0);
 
-            JFCustomWidget.subscribe("submit", function() {
-                let stateValue = document.getElementById("state").value;
-                if (stateValue === 'Other') {
-                    stateValue = document.getElementById("otherStateInput").value;
-                }
+         JFCustomWidget.subscribe("submit", function() {
+            let stateValue = document.getElementById("state").value;
+            if (stateValue === 'Other') {
+                stateValue = document.getElementById("otherStateInput").value;
+            }
+        
+            let districtValue = document.getElementById("district").value;
+            if (districtValue === 'Other') {
+                districtValue = document.getElementById("otherDistrictInput").value;
+            }
             
-                let districtValue = document.getElementById("district").value;
-                if (districtValue === 'Other') {
-                    districtValue = document.getElementById("otherDistrictInput").value;
-                }
-                
-                let siteValue = document.getElementById("site").value;
-                if (siteValue === 'Other') {
-                    siteValue = document.getElementById("otherSiteInput").value;
-                }
-            
-                let result = {
-                    valid: true,
-                    value: JSON.stringify({
-                        state: stateValue,
-                        district: districtValue,
-                        site: siteValue
-                    })
-                };
-                JFCustomWidget.sendSubmit(result);
+            let siteValue = document.getElementById("site").value;
+            if (siteValue === 'Other') {
+                siteValue = document.getElementById("otherSiteInput").value;
+            }
+        
+            const jsonString = JSON.stringify({
+                state: stateValue,
+                district: districtValue,
+                site: siteValue
             });
+        
+            JFCustomWidget.sendSubmit({
+                valid: true,
+                value: jsonString
+            });
+        });
         }
     </script>
 </body>
