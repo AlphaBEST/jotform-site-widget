@@ -3077,44 +3077,35 @@
         toggleOtherInput('site');
         document.getElementById('district').disabled = true;
         document.getElementById('site').disabled = true;
-        
-        // Set the initial height of the widget on load
-        setTimeout(() => {
-            if (JFCustomWidget) {
-                JFCustomWidget.setHeight(document.body.scrollHeight);
-            }
-        }, 0);
-    
-        JFCustomWidget.subscribe("submit", function() {
-            let stateValue = document.getElementById("state").value;
-            if (stateValue === 'Other') {
-                stateValue = document.getElementById("otherStateInput").value;
-            }
-        
-            let districtValue = document.getElementById("district").value;
-            if (districtValue === 'Other') {
-                districtValue = document.getElementById("otherDistrictInput").value;
-            }
-            
-            let siteValue = document.getElementById("site").value;
-            if (siteValue === 'Other') {
-                siteValue = document.getElementById("otherSiteInput").value;
-            }
-        
-            const jsonString = JSON.stringify({
-                state: stateValue,
-                district: districtValue,
-                site: siteValue
-            });
-        
-            JFCustomWidget.sendData({
-                valid: true,
-                value: jsonString
-            });
-        });
     
         JFCustomWidget.subscribe("ready", function() {
-            JFCustomWidget.sendReady();
+            function sendToForm() {
+                let stateValue = document.getElementById("state").value;
+                if (stateValue === 'Other') {
+                    stateValue = document.getElementById("otherStateInput").value;
+                }
+            
+                let districtValue = document.getElementById("district").value;
+                if (districtValue === 'Other') {
+                    districtValue = document.getElementById("otherDistrictInput").value;
+                }
+                
+                let siteValue = document.getElementById("site").value;
+                if (siteValue === 'Other') {
+                    siteValue = document.getElementById("otherSiteInput").value;
+                }
+
+                JFCustomWidget.sendSubmit({
+                    state: stateValue,
+                    district: districtValue,
+                    site: siteValue
+                });
+            }
+
+            // Listen for submission
+            JFCustomWidget.subscribe("submit", function() {
+                sendToForm();
+            });
         });
     }
 </script>
