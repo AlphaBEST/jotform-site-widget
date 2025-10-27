@@ -48,24 +48,24 @@
 <body>
     <div class="form-group">
         <label for="state">State:</label>
-        <select id="state" onchange="updateDistricts(); toggleOtherInput('state')">
+        <select id="state" class="form-dropdown" name="state" data-component="dropdown" onchange="updateDistricts(); toggleOtherInput('state')">
             <option value="">Please choose</option>
         </select>
-        <input type="text" id="otherStateInput" class="other-input-hidden" placeholder="Enter State">
+        <input type="text" id="otherStateInput" name="state_other" data-component="textbox" class="other-input-hidden form-textbox" placeholder="Enter State">
     </div>
     <div class="form-group">
         <label for="district">District:</label>
-        <select id="district" onchange="updateSites(); toggleOtherInput('district')">
+        <select id="district" class="form-dropdown" name="district" data-component="dropdown" onchange="updateSites(); toggleOtherInput('district')">
             <option value="">Choose State First</option>
         </select>
-        <input type="text" id="otherDistrictInput" class="other-input-hidden" placeholder="Enter District">
+        <input type="text" id="otherDistrictInput" name="district_other" data-component="textbox" class="other-input-hidden form-textbox" placeholder="Enter District">
     </div>
     <div class="form-group">
         <label for="site">Site:</label>
-        <select id="site" onchange="toggleOtherInput('site')">
+        <select id="site" class="form-dropdown" name="site" data-component="dropdown" onchange="toggleOtherInput('site')">
             <option value="">Choose District First</option>
         </select>
-        <input type="text" id="otherSiteInput" class="other-input-hidden" placeholder="Enter Site">
+        <input type="text" id="otherSiteInput" name="site_other" data-component="textbox" class="other-input-hidden form-textbox" placeholder="Enter Site">
     </div>
     <script>
         const data = [
