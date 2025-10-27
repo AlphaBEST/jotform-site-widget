@@ -6,38 +6,14 @@
     <style>
         body {
             font-family: sans-serif;
-            padding: 1rem;
-            background-color: #f8f8f8;
+            /* padding: 1rem; */
+            /* background-color: #f8f8f8; */
             color: #333;
         }
         .form-group {
             display: flex;
             flex-direction: column;
             margin-bottom: 1rem;
-        }
-        label {
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #555;
-        }
-        select, input[type="text"] {
-            padding: 0.75rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        select:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-        }
-        input[type="text"] {
-            margin-top: 0.5rem;
-            width: 100%;
-            box-sizing: border-box;
-            cursor: text;
         }
         /* Style for initially hidden text inputs */
         .other-input-hidden {
@@ -47,21 +23,21 @@
 </head>
 <body>
     <div class="form-group">
-        <label for="state">State:</label>
+        <label class="form-label form-label-top form-label-auto" for="state">State:</label>
         <select id="state" class="form-dropdown" name="state" data-component="dropdown" onchange="updateDistricts(); toggleOtherInput('state')">
             <option value="">Please choose</option>
         </select>
         <input type="text" id="otherStateInput" name="state_other" data-component="textbox" class="other-input-hidden form-textbox" placeholder="Enter State">
     </div>
     <div class="form-group">
-        <label for="district">District:</label>
+        <label class="form-label form-label-top form-label-auto" for="district">District:</label>
         <select id="district" class="form-dropdown" name="district" data-component="dropdown" onchange="updateSites(); toggleOtherInput('district')">
             <option value="">Choose State First</option>
         </select>
         <input type="text" id="otherDistrictInput" name="district_other" data-component="textbox" class="other-input-hidden form-textbox" placeholder="Enter District">
     </div>
     <div class="form-group">
-        <label for="site">Site:</label>
+        <label class="form-label form-label-top form-label-auto" for="site">Site:</label>
         <select id="site" class="form-dropdown" name="site" data-component="dropdown" onchange="toggleOtherInput('site')">
             <option value="">Choose District First</option>
         </select>
