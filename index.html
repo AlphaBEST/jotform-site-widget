@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <h1>V1 Widget</h1>
+    <h1>V2 Widget</h1>
     <div class="form-group">
         <label class="form-label form-label-top form-label-auto" for="state">State:</label>
         <select id="state" class="form-dropdown" name="state" data-component="dropdown" onchange="updateDistricts(); toggleOtherInput('state')">
@@ -3080,37 +3080,46 @@
         document.getElementById('district').disabled = true;
         document.getElementById('site').disabled = true;
     
-        JFCustomWidget.subscribe("ready", function() {
-            function sendToForm() {
-                let stateValue = document.getElementById("state").value;
-                if (stateValue === 'Other') {
-                    stateValue = document.getElementById("otherStateInput").value;
-                }
-            
-                let districtValue = document.getElementById("district").value;
-                if (districtValue === 'Other') {
-                    districtValue = document.getElementById("otherDistrictInput").value;
-                }
-                
-                let siteValue = document.getElementById("site").value;
-                if (siteValue === 'Other') {
-                    siteValue = document.getElementById("otherSiteInput").value;
-                }
-
-                JFCustomWidget.sendSubmit({
-                    valid: true,
-                    value: JSON.stringify({
-                        state: stateValue,
-                        district: districtValue,
-                        site: siteValue
-                    })
-                });
+        function getValues() {
+            let stateValue = document.getElementById("state").value;
+            if (stateValue === 'Other') {
+                stateValue = document.getElementById("otherStateInput").value;
             }
 
-            // Listen for submission
-            JFCustomWidget.subscribe("submit", function() {
-                sendToForm();
+            let districtValue = document.getElementById("district").value;
+            if (districtValue === 'Other') {
+                districtValue = document.getElementById("otherDistrictInput").value;
+            }
+
+            let siteValue = document.getElementById("site").value;
+            if (siteValue === 'Other') {
+                siteValue = document.getElementById("otherSiteInput").value;
+            }
+
+            return {
+                state: stateValue,
+                district: districtValue,
+                site: siteValue
+            };
+        }
+
+        function sendToForm() {
+            // Send JSON string so integrations like Google Sheets can read it
+            JFCustomWidget.sendSubmit(JSON.stringify(getValues()));
+        }
+
+        JFCustomWidget.subscribe("ready", function() {
+            // Send data whenever the widget changes
+            ["state","district","site","otherStateInput","otherDistrictInput","otherSiteInput"].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener("change", sendToForm);
+                    el.addEventListener("input", sendToForm);
+                }
             });
+
+            // Also send on form submit
+            JFCustomWidget.subscribe("submit", sendToForm);
         });
     }
 </script>
