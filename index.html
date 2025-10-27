@@ -23,7 +23,7 @@
     </style>
 </head>
 <body>
-    <h1>V2 Widget</h1>
+    <h1>V3 Widget</h1>
     <div class="form-group">
         <label class="form-label form-label-top form-label-auto" for="state">State:</label>
         <select id="state" class="form-dropdown" name="state" data-component="dropdown" onchange="updateDistricts(); toggleOtherInput('state')">
@@ -3105,7 +3105,10 @@
 
         function sendToForm() {
             // Send JSON string so integrations like Google Sheets can read it
-            JFCustomWidget.sendSubmit(JSON.stringify(getValues()));
+            JFCustomWidget.sendSubmit({
+                valid: true,
+                value: JSON.stringify(getValues())
+            });
         }
 
         JFCustomWidget.subscribe("ready", function() {
